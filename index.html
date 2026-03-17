@@ -3,783 +3,998 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<title>Galaxy Fuse - Free HTML5 Game</title>
-<meta name="description" content="Play Galaxy Fuse - Swipe to merge numbers into stars, then split them to create two smaller stars flying apart.">
-<meta name="theme-color" content="#0a0a1a">
+<title>Nova Chain – Tap to Reverse Orbits | Hyper-Casual Space Game</title>
+<meta name="description" content="Tap to reverse all planet orbits. Time your reversals to fuse planets before they fall into the black hole. Free browser game – no download, no login.">
+<meta name="keywords" content="hyper casual game, browser game, space game, orbit game, tap game, free online game, html5 game">
+<meta name="theme-color" content="#05050f">
 <meta name="robots" content="index, follow">
 <link rel="canonical" href="https://balinti.github.io/galaxy-fuse/">
 <meta property="og:type" content="website">
-<meta property="og:title" content="Galaxy Fuse - Free HTML5 Game">
-<meta property="og:description" content="Play Galaxy Fuse - Swipe to merge numbers into stars, then split them to create two smaller stars flying apart.">
+<meta property="og:title" content="Nova Chain – Tap to Reverse Orbits | Hyper-Casual Space Game">
+<meta property="og:description" content="Tap to reverse all planet orbits. Time your reversals to fuse planets before they fall into the black hole. Free browser game – no download, no login.">
 <meta property="og:url" content="https://balinti.github.io/galaxy-fuse/">
 <meta property="og:image" content="https://balinti.github.io/galaxy-fuse/og-1200x630.png">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Galaxy Fuse - Free HTML5 Game">
-<meta name="twitter:description" content="Play Galaxy Fuse - Swipe to merge numbers into stars, then split them to create two smaller stars flying apart.">
+<meta name="twitter:title" content="Nova Chain – Tap to Reverse Orbits | Hyper-Casual Space Game">
+<meta name="twitter:description" content="Tap to reverse all planet orbits. Time your reversals to fuse planets before they fall into the black hole. Free browser game – no download, no login.">
 <meta name="twitter:image" content="https://balinti.github.io/galaxy-fuse/og-1200x630.png">
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4099346100621490" crossorigin="anonymous"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-html,body{width:100%;height:100%;overflow-x:hidden;background:#05050f;font-family:'Segoe UI',system-ui,-apple-system,sans-serif;color:#c8c8e0}
-#game-wrap{position:relative;max-width:420px;margin:0 auto;display:flex;flex-direction:column;align-items:center;min-height:100vh;min-height:100dvh}
-canvas{display:block;width:100%;max-width:420px;touch-action:none;border-radius:10px;margin-top:4px}
-#overlay{display:none;position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:10}
-#overlay.active{display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:auto}
-#overlay .btn{background:linear-gradient(135deg,#6e3eff,#3ec6ff);border:none;color:#fff;padding:12px 28px;border-radius:24px;font-size:15px;font-weight:600;cursor:pointer;margin:6px;transition:transform .15s,box-shadow .15s;box-shadow:0 4px 18px rgba(62,198,255,.3)}
-#overlay .btn:active{transform:scale(.95)}
-#overlay .btn.secondary{background:rgba(255,255,255,.12);box-shadow:none}
-#overlay .share-row{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;justify-content:center}
-#challenge-bar{display:none;text-align:center;font-size:13px;padding:6px 12px;background:rgba(110,62,255,.2);border-radius:8px;margin:6px 0;max-width:380px}
+html,body{width:100%;height:100%;overflow:hidden;background:#02020a;font-family:'Segoe UI',system-ui,-apple-system,sans-serif;color:#c8c8e0;user-select:none}
+#wrap{position:relative;width:100%;height:100%;max-width:420px;margin:0 auto;display:flex;flex-direction:column;align-items:center;justify-content:center}
+canvas{display:block;touch-action:none;cursor:pointer}
+#challenge-bar{position:absolute;top:8px;left:50%;transform:translateX(-50%);font-size:12px;padding:5px 14px;background:rgba(110,62,255,.25);border:1px solid rgba(110,62,255,.4);border-radius:20px;white-space:nowrap;display:none;z-index:20;pointer-events:none}
 #challenge-bar.active{display:block}
-details{max-width:420px;width:100%;padding:12px 16px;margin-top:8px;background:rgba(255,255,255,.04);border-radius:10px;font-size:13px;line-height:1.6}
-details summary{cursor:pointer;font-weight:600;font-size:14px;color:#8888cc;list-style:none}
-details summary::-webkit-details-marker{display:none}
-details summary::before{content:'▸ ';transition:transform .2s}
-details[open] summary::before{content:'▾ '}
-details p{margin:6px 0;color:#9999bb}
-details kbd{background:rgba(255,255,255,.1);padding:2px 6px;border-radius:4px;font-size:12px}
-@media(max-height:600px){details{display:none}}
 </style>
 </head>
 <body>
-<div id="game-wrap">
+<div id="wrap">
 <canvas id="c"></canvas>
 <div id="challenge-bar"></div>
-<div id="overlay">
-<div class="share-row" id="share-row"></div>
 </div>
-<details>
-<summary>About Galaxy Fuse</summary>
-<p><strong>Controls:</strong> <kbd>Tap</kbd> or <kbd>Space</kbd>/<kbd>Enter</kbd> to drop a star. Tap a large star (level 3+) to split it.</p>
-<p><strong>Goal:</strong> Merge matching stars to grow them. Don't let stars pile past the danger line!</p>
-<p><strong>Tips:</strong> Chain merges quickly for combo multipliers. Splitting costs points but clears space. The black hole pulls stars down — use it strategically. Solar wind gusts start after 60 seconds.</p>
-<p><strong>Keywords:</strong> Galaxy Fuse, merge game, drop game, space puzzle, hyper-casual, HTML5 game, free browser game, black hole, star merge, combo chain.</p>
-</details>
-</div>
-
 <script>
 'use strict';
 (() => {
 
-// ---- CONSTANTS ----
-const MAX_W = 420, MAX_H = 750, PAD = 14;
-const MAX_STARS = 70;
-const MERGE_CD = 0.08, DROP_CD = 0.18;
-const SPLIT_MAX = 3, SPLIT_RECHARGE = 18;
-const DANGER_HOLD_LIMIT = 2.0;
-const STAR_COLORS = [
-  [320, 80, 60], // L1 pink
-  [270, 75, 58], // L2 purple
-  [210, 85, 55], // L3 blue
-  [170, 80, 50], // L4 teal
-  [130, 75, 50], // L5 green
-  [55, 85, 52],  // L6 yellow
-  [30, 90, 55],  // L7 orange
-  [0, 85, 58],   // L8 red
-  [290, 90, 65], // L9 magenta
-  [200, 95, 65], // L10 cyan
-];
-
-// ---- CANVAS SETUP ----
+// ── CANVAS SETUP ──────────────────────────────────────────────────────────────
 const cvs = document.getElementById('c');
-const ctx = cvs.getContext('2d');
-const overlay = document.getElementById('overlay');
-const shareRow = document.getElementById('share-row');
+const ctx  = cvs.getContext('2d');
+const wrap = document.getElementById('wrap');
 const challengeBar = document.getElementById('challenge-bar');
 
 let DPR = Math.min(window.devicePixelRatio || 1, 2);
-let W, H, tubeX, tubeY, tubeW, tubeH, dangerY, bhX, bhY;
+let W = 420, H = 750, CX, CY;
 
 function resize() {
   DPR = Math.min(window.devicePixelRatio || 1, 2);
-  const wrap = document.getElementById('game-wrap');
-  const vw = Math.min(wrap.clientWidth, MAX_W);
-  const vh = Math.min(window.innerHeight * 0.88, MAX_H);
+  const vw = Math.min(wrap.clientWidth, 420);
+  const vh = Math.min(window.innerHeight, 750);
   W = vw; H = vh;
-  cvs.width = W * DPR;
+  cvs.width  = W * DPR;
   cvs.height = H * DPR;
-  cvs.style.width = W + 'px';
+  cvs.style.width  = W + 'px';
   cvs.style.height = H + 'px';
   ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
-  tubeX = PAD; tubeY = PAD + 40;
-  tubeW = W - PAD * 2; tubeH = H - tubeY - PAD;
-  dangerY = tubeY + 86;
-  bhX = tubeX + tubeW / 2;
-  bhY = tubeY + tubeH + 10;
+  CX = W / 2; CY = H / 2;
 }
 resize();
 window.addEventListener('resize', resize);
 
-// ---- CHALLENGE PARAMS ----
+// ── CHALLENGE URL PARAM ───────────────────────────────────────────────────────
 const urlP = new URLSearchParams(window.location.search);
-const challengeScore = urlP.get('challengeScore') ? parseInt(urlP.get('challengeScore')) : null;
-const challengeName = urlP.get('challengeName') || null;
-if (challengeScore !== null) {
+const challengeChain = urlP.get('chain') ? parseInt(urlP.get('chain')) : null;
+if (challengeChain !== null) {
+  challengeBar.textContent = `Beat a ×${challengeChain} chain!`;
   challengeBar.classList.add('active');
-  challengeBar.textContent = `${challengeName || 'Someone'} challenges you to beat ${challengeScore} points!`;
+  setTimeout(() => challengeBar.classList.remove('active'), 3000);
 }
 
-// ---- GAME STATE ----
-let state = 'start'; // start, playing, gameover
-let stars = [], particles = [];
-let score = 0, bestScore = 0;
-let gameTime = 0, swingAngle = 0;
-let comboCount = 0, lastMergeTime = 0;
-let splitCharges = SPLIT_MAX, splitTimer = 0;
-let dangerHold = 0;
-let dropCooldown = 0;
-let shakeTime = 0, shakeIntensity = 0;
-let nextStarLevel = 1;
-let solarWindTimer = 0, solarWindDir = 0, solarWindActive = false, solarWindTelegraph = 0;
-let pendingDrop = false;
+// ── STORAGE ───────────────────────────────────────────────────────────────────
+function lsGet(k, def) { try { const v = localStorage.getItem(k); return v === null ? def : JSON.parse(v); } catch(e) { return def; } }
+function lsSet(k, v)   { try { localStorage.setItem(k, JSON.stringify(v)); } catch(e) {} }
 
-try { bestScore = parseInt(localStorage.getItem('gf_best')) || 0; } catch(e) {}
+let bestScore   = lsGet('nc_best', 0);
+let bestChainAT = lsGet('nc_bestChain', 0);
+let streakDate  = lsGet('nc_streakDate', '');
+let streak      = lsGet('nc_streak', 0);
 
-// ---- STAR CLASS ----
-function Star(x, y, level, vx, vy) {
-  this.x = x; this.y = y; this.level = level;
-  this.vx = vx || 0; this.vy = vy || 0;
-  this.r = 10 + level * 4;
-  this.mergeCd = 0;
-  this.alive = true;
-  this.flash = 0;
+function updateStreak() {
+  const today = new Date().toDateString();
+  if (streakDate === today) return;
+  const yesterday = new Date(Date.now() - 86400000).toDateString();
+  streak = (streakDate === yesterday) ? streak + 1 : 1;
+  streakDate = today;
+  lsSet('nc_streak', streak);
+  lsSet('nc_streakDate', streakDate);
 }
 
-function starRadius(level) { return 10 + level * 4; }
+// ── CONSTANTS ─────────────────────────────────────────────────────────────────
+const BH_R_BASE  = 24;    // black hole base radius
+const RING_RADII = [0.30, 0.50, 0.68]; // fraction of CY
+const PLANET_R   = 11;
+const DECAY_BASE = 0.6;   // px/s inward drift (outer ring)
+const CHAIN_WIN  = 1.5;   // seconds for chain window
+const FUSE_DIST  = PLANET_R * 2.6;
+const COLORS     = [200,280,50,170,320,120,30,260]; // hue palette
 
-function starColor(level) {
-  const c = STAR_COLORS[(level - 1) % STAR_COLORS.length];
-  return `hsl(${c[0]},${c[1]}%,${c[2]}%)`;
+// ── GAME STATE ────────────────────────────────────────────────────────────────
+let state = 'start'; // 'start' | 'playing' | 'gameover'
+let score = 0, bestChainSession = 0;
+let hearts = 3;
+let planets = [], particles = [], shockwaves = [];
+let tapFlash = 0, tapFlashHue = 200;
+let shakeX = 0, shakeY = 0, shakeMag = 0, shakeDecay = 0;
+let bgHue = 220;
+let bhPulse = 1.0;    // multiplier for black hole radius
+let bhGlow  = 0;      // 0-1 supernova white glow (gameover)
+let chainCount = 0, lastFuseTime = -999;
+let chainMult = 1;    // display multiplier
+let chainSlamScale = 0, chainSlamAlpha = 0;
+let novaMode = 0;     // 0-1 NOVA flash
+let scoreCountDisplay = 0; // animated score on game-over
+let gameoverT = 0;
+let newBest = false;
+let prevBestScore = 0;
+let gravSurgeT = 0, gravSurgeActive = false;
+let gravSurgeTimer = 0;
+let splitWarnings = []; // {planet, t}
+let squeezeX = 1, squeezeDecay = 0;
+let accretionAngle = 0;
+let stars3 = []; // parallax layer 1
+let stars2 = [];
+let stars1 = [];
+let lastTime = 0;
+let animId;
+
+// ── STARFIELD ─────────────────────────────────────────────────────────────────
+function initStars() {
+  stars3 = []; stars2 = []; stars1 = [];
+  for (let i = 0; i < 80; i++)  stars3.push({x: Math.random()*W, y: Math.random()*H, r: 0.5+Math.random()*0.5, a: 0.3+Math.random()*0.4});
+  for (let i = 0; i < 40; i++)  stars2.push({x: Math.random()*W, y: Math.random()*H, r: 0.8+Math.random()*0.8, a: 0.4+Math.random()*0.5});
+  for (let i = 0; i < 15; i++)  stars1.push({x: Math.random()*W, y: Math.random()*H, r: 1.0+Math.random()*1.2, a: 0.6+Math.random()*0.4});
+}
+initStars();
+
+// ── PLANET FACTORY ────────────────────────────────────────────────────────────
+function makePlanet(ringIdx, angle, hue) {
+  const baseR = RING_RADII[ringIdx] * (Math.min(CX, CY) - 20);
+  const speed = (0.8 + Math.random() * 0.16) * (ringIdx === 0 ? 1.3 : ringIdx === 1 ? 1.0 : 0.75);
+  return {
+    ringIdx,
+    angle,
+    orbitR: baseR,
+    baseOrbitR: baseR,
+    speed,        // radians/s, sign = direction
+    hue,
+    r: PLANET_R,
+    trail: [],
+    alive: true,
+    critical: 0,  // 0-1 for warning pulse
+    isMini: false,
+    splitWarn: false
+  };
 }
 
-function starGlow(level) {
-  const c = STAR_COLORS[(level - 1) % STAR_COLORS.length];
-  return `hsla(${c[0]},${c[1]}%,${c[2]}%,0.3)`;
-}
-
-// ---- PARTICLES ----
-function Particle(x, y, hue, speed, life) {
-  this.x = x; this.y = y;
-  const a = Math.random() * Math.PI * 2;
-  const s = speed * (0.5 + Math.random());
-  this.vx = Math.cos(a) * s;
-  this.vy = Math.sin(a) * s;
-  this.life = life || (0.4 + Math.random() * 0.5);
-  this.maxLife = this.life;
-  this.hue = hue;
-  this.size = 2 + Math.random() * 3;
-}
-
-function spawnMergeParticles(x, y, level) {
-  const hue = STAR_COLORS[(level - 1) % STAR_COLORS.length][0];
-  for (let i = 0; i < 12 + level * 3; i++) {
-    particles.push(new Particle(x, y, hue, 80 + level * 15, 0.5 + Math.random() * 0.4));
+// ── GAME SETUP ────────────────────────────────────────────────────────────────
+function buildPhase() {
+  const ph = getPhase();
+  planets = [];
+  const ringCount = ph >= 3 ? (ph >= 5 ? 3 : 2) : 1;
+  const countPerRing = ph >= 5 ? [3,2,1] : ph >= 4 ? [3,2] : ph >= 2 ? [3] : [2];
+  for (let ri = 0; ri < ringCount && ri < countPerRing.length; ri++) {
+    const n = Math.min(countPerRing[ri], 3);
+    for (let i = 0; i < n; i++) {
+      const angle = (i / n) * Math.PI * 2 + ri * 0.4;
+      const hue = COLORS[(ri * 3 + i) % COLORS.length];
+      const p = makePlanet(ri, angle, hue);
+      if (Math.random() < 0.5) p.speed = -p.speed;
+      planets.push(p);
+    }
   }
 }
 
-function spawnSplitParticles(x, y, level) {
-  const hue = STAR_COLORS[(level - 1) % STAR_COLORS.length][0];
-  for (let i = 0; i < 8; i++) {
-    particles.push(new Particle(x, y, hue, 50, 0.3));
-  }
+function getPhase() {
+  if (score >= 75) return 5;
+  if (score >= 40) return 4;
+  if (score >= 20) return 3;
+  if (score >= 8)  return 2;
+  return 1;
 }
 
-// ---- PHYSICS HELPERS ----
-function gravity(t) { return 520 + 3.2 * t; }
-function swingSpeed(t) { return 1.2 + 0.015 * t; }
-function swingAmp() { return tubeW * 0.42; }
-function pullScale(t) { return 1 + 0.012 * t; }
-function comboWindow(t) { return 0.9 - Math.min(0.35, t * 0.002); }
-
-function dropX() {
-  return tubeX + tubeW / 2 + Math.sin(swingAngle) * swingAmp();
+function getDecayRate(ringIdx) {
+  const ph = getPhase();
+  let base = DECAY_BASE * (1 + (ph - 1) * 0.18);
+  if (ph >= 5) base *= 1.3;
+  if (gravSurgeActive) base *= 4;
+  // inner ring decays faster
+  if (ringIdx === 0) base *= 2.2;
+  if (ringIdx === 1) base *= 1.4;
+  return base;
 }
 
-// ---- RESET ----
 function resetGame() {
-  stars = []; particles = [];
-  score = 0; gameTime = 0; swingAngle = 0;
-  comboCount = 0; lastMergeTime = 0;
-  splitCharges = SPLIT_MAX; splitTimer = 0;
-  dangerHold = 0; dropCooldown = 0;
-  shakeTime = 0; shakeIntensity = 0;
-  nextStarLevel = 1;
-  solarWindTimer = 0; solarWindDir = 0; solarWindActive = false; solarWindTelegraph = 0;
-  pendingDrop = false;
+  score = 0; hearts = 3; chainCount = 0; chainMult = 1;
+  lastFuseTime = -999; bestChainSession = 0;
+  tapFlash = 0; shakeMag = 0; bhPulse = 1; bhGlow = 0;
+  novaMode = 0; chainSlamScale = 0; chainSlamAlpha = 0;
+  gravSurgeActive = false; gravSurgeT = 0; gravSurgeTimer = 0;
+  squeezeX = 1; squeezeDecay = 0;
+  particles = []; shockwaves = []; splitWarnings = [];
+  bgHue = 220;
+  buildPhase();
 }
 
-// ---- DROP STAR ----
-function dropStar() {
-  if (dropCooldown > 0 || stars.length >= MAX_STARS) return;
-  const x = dropX();
-  const level = nextStarLevel;
-  const s = new Star(x, tubeY + 16, level, 0, 0);
-  stars.push(s);
-  dropCooldown = DROP_CD;
-  nextStarLevel = Math.random() < 0.7 ? 1 : (Math.random() < 0.7 ? 2 : 3);
-}
-
-// ---- SPLIT STAR ----
-function trySplit(tx, ty) {
-  if (splitCharges <= 0) return false;
-  for (let i = stars.length - 1; i >= 0; i--) {
-    const s = stars[i];
-    if (s.level < 3) continue;
-    const dx = tx - s.x, dy = ty - s.y;
-    const hitR = s.r * 1.15;
-    if (dx * dx + dy * dy <= hitR * hitR) {
-      splitCharges--;
-      const newLevel = s.level - 1;
-      const L = s.level;
-      const baseUp = 220 + 12 * L;
-      const side = 160 + 10 * L;
-      const inherit = 0.35;
-      const s1 = new Star(s.x, s.y, newLevel, -side + s.vx * inherit, -baseUp + s.vy * inherit);
-      const s2 = new Star(s.x, s.y, newLevel, side + s.vx * inherit, -baseUp + s.vy * inherit);
-      s1.mergeCd = 0.2; s2.mergeCd = 0.2;
-      stars.splice(i, 1);
-      stars.push(s1, s2);
-      score = Math.max(0, score - 25 * L);
-      comboCount = 0;
-      spawnSplitParticles(s.x, s.y, L);
-      shakeTime = 0.1; shakeIntensity = 3;
-      return true;
-    }
-  }
-  return false;
-}
-
-// ---- INPUT ----
-function handleTap(cx, cy) {
-  if (state === 'start') { state = 'playing'; resetGame(); overlay.classList.remove('active'); return; }
-  if (state === 'gameover') { state = 'playing'; resetGame(); overlay.classList.remove('active'); return; }
-  if (state === 'playing') {
-    // Convert page coords to canvas coords
-    const rect = cvs.getBoundingClientRect();
-    const x = (cx - rect.left) * (W / rect.width);
-    const y = (cy - rect.top) * (H / rect.height);
-    if (!trySplit(x, y)) {
-      dropStar();
-    }
+// ── PARTICLES ─────────────────────────────────────────────────────────────────
+function spawnFuseParticles(x, y, hue1, hue2) {
+  const n = novaMode > 0.5 ? 144 : 48;
+  for (let i = 0; i < n; i++) {
+    const a = Math.random() * Math.PI * 2;
+    const s = 80 + Math.random() * 160;
+    const h = Math.random() < 0.5 ? hue1 : hue2;
+    particles.push({x, y, vx: Math.cos(a)*s, vy: Math.sin(a)*s,
+      life: 0.6+Math.random()*0.5, maxLife: 1.1, hue: h, size: 2+Math.random()*4, type:'fuse'});
   }
 }
 
-cvs.addEventListener('pointerdown', (e) => {
-  e.preventDefault();
-  handleTap(e.clientX, e.clientY);
+function spawnTapParticles() {
+  for (let i = 0; i < 8; i++) {
+    const a = Math.random() * Math.PI * 2;
+    const s = 30 + Math.random() * 60;
+    const x = Math.random() * W;
+    const y = Math.random() * H;
+    particles.push({x, y, vx: Math.cos(a)*s, vy: Math.sin(a)*s,
+      life: 0.3+Math.random()*0.2, maxLife: 0.5, hue: tapFlashHue, size: 1+Math.random()*2, type:'tap'});
+  }
+}
+
+function spawnLaunchStreak(p) {
+  for (let i = 0; i < 12; i++) {
+    const a = Math.random() * Math.PI * 2;
+    const s = 40 + Math.random() * 80;
+    particles.push({x: CX + Math.cos(p.angle)*p.orbitR,
+      y: CY + Math.sin(p.angle)*p.orbitR,
+      vx: Math.cos(a)*s, vy: Math.sin(a)*s,
+      life: 0.4+Math.random()*0.3, maxLife: 0.7, hue: p.hue, size: 1.5+Math.random()*2.5, type:'launch'});
+  }
+}
+
+function addShockwave(x, y) {
+  shockwaves.push({x, y, r: 5, maxR: Math.min(CX,CY)*0.9, life: 1, maxLife: 1});
+}
+
+function triggerShake(mag, dur) {
+  shakeMag = mag; shakeDecay = mag / dur;
+}
+
+// ── TAP HANDLER ───────────────────────────────────────────────────────────────
+function onTap() {
+  if (state === 'start') { state = 'playing'; resetGame(); return; }
+  if (state === 'gameover') {
+    if (gameoverT > 1.5) { state = 'playing'; resetGame(); }
+    return;
+  }
+  // reverse all planets
+  for (const p of planets) p.speed = -p.speed;
+  tapFlash = 1;
+  tapFlashHue = bgHue;
+  squeezeX = 0.97; squeezeDecay = 0.97;
+  spawnTapParticles();
+  // extend trails briefly
+  for (const p of planets) {
+    if (p.trail.length > 0) {
+      const last = p.trail[p.trail.length-1];
+      for (let i = 0; i < 5; i++) p.trail.push({...last, a: 0.15});
+    }
+  }
+}
+
+// ── INPUT ─────────────────────────────────────────────────────────────────────
+cvs.addEventListener('pointerdown', e => { e.preventDefault(); onTap(); });
+document.addEventListener('keydown', e => {
+  if (e.code === 'Space' || e.code === 'Enter') { e.preventDefault(); onTap(); }
 });
 
-document.addEventListener('keydown', (e) => {
-  if (e.code === 'Space' || e.code === 'Enter') {
-    e.preventDefault();
-    if (state === 'start' || state === 'gameover') {
-      state = 'playing'; resetGame(); overlay.classList.remove('active');
-    } else if (state === 'playing') {
-      dropStar();
-    }
-  }
-});
+// ── FUSE LOGIC ────────────────────────────────────────────────────────────────
+function tryFuse(dt, now) {
+  const used = new Set();
+  for (let i = 0; i < planets.length; i++) {
+    if (used.has(i)) continue;
+    for (let j = i+1; j < planets.length; j++) {
+      if (used.has(j)) continue;
+      const a = planets[i], b = planets[j];
+      const ax = CX + Math.cos(a.angle) * a.orbitR;
+      const ay = CY + Math.sin(a.angle) * a.orbitR;
+      const bx = CX + Math.cos(b.angle) * b.orbitR;
+      const by = CY + Math.sin(b.angle) * b.orbitR;
+      const dx = ax - bx, dy = ay - by;
+      if (dx*dx + dy*dy < FUSE_DIST * FUSE_DIST) {
+        // FUSE!
+        used.add(i); used.add(j);
+        const mx = (ax+bx)/2, my = (ay+by)/2;
 
-// ---- UPDATE ----
-function update(dt) {
-  if (state !== 'playing') return;
-  gameTime += dt;
-
-  // Swing
-  swingAngle += swingSpeed(gameTime) * dt;
-
-  // Drop cooldown
-  if (dropCooldown > 0) dropCooldown -= dt;
-
-  // Split recharge
-  splitTimer += dt;
-  if (splitTimer >= SPLIT_RECHARGE && splitCharges < SPLIT_MAX) {
-    splitCharges++;
-    splitTimer = 0;
-  }
-
-  // Survival bonus
-  score += 2 * dt;
-
-  // Solar wind
-  if (gameTime > 60) {
-    solarWindTimer += dt;
-    if (!solarWindActive && solarWindTimer > 8 + Math.random() * 6) {
-      solarWindTelegraph = 1.2;
-      solarWindDir = Math.random() < 0.5 ? -1 : 1;
-      solarWindTimer = 0;
-    }
-    if (solarWindTelegraph > 0) {
-      solarWindTelegraph -= dt;
-      if (solarWindTelegraph <= 0) {
-        solarWindActive = true;
-        solarWindTimer = 0;
-      }
-    }
-    if (solarWindActive) {
-      solarWindTimer += dt;
-      for (const s of stars) {
-        s.vx += solarWindDir * 120 * dt;
-      }
-      if (solarWindTimer > 1.5) {
-        solarWindActive = false;
-        solarWindTimer = 0;
-      }
-    }
-  }
-
-  // Physics for each star
-  const g = gravity(gameTime);
-  const ps = pullScale(gameTime);
-
-  for (const s of stars) {
-    if (!s.alive) continue;
-    // Gravity
-    s.vy += g * dt;
-
-    // Black hole pull
-    const dx = bhX - s.x;
-    const dy = bhY - s.y;
-    const dist = Math.max(60, Math.sqrt(dx * dx + dy * dy));
-    const pull = 8000 * ps / (dist * dist);
-    s.vx += (dx / dist) * pull * dt;
-    s.vy += (dy / dist) * pull * dt;
-
-    // Move
-    s.x += s.vx * dt;
-    s.y += s.vy * dt;
-
-    // Wall bounce
-    const leftWall = tubeX + s.r;
-    const rightWall = tubeX + tubeW - s.r;
-    const bottomWall = tubeY + tubeH - s.r;
-
-    if (s.x < leftWall) { s.x = leftWall; s.vx = Math.abs(s.vx) * 0.5; }
-    if (s.x > rightWall) { s.x = rightWall; s.vx = -Math.abs(s.vx) * 0.5; }
-    if (s.y > bottomWall) { s.y = bottomWall; s.vy = -Math.abs(s.vy) * 0.35; s.vx *= 0.9; }
-
-    // Merge cooldown
-    if (s.mergeCd > 0) s.mergeCd -= dt;
-    if (s.flash > 0) s.flash -= dt;
-  }
-
-  // ---- COLLISIONS / MERGE ----
-  for (let i = 0; i < stars.length; i++) {
-    const a = stars[i];
-    if (!a.alive) continue;
-    for (let j = i + 1; j < stars.length; j++) {
-      const b = stars[j];
-      if (!b.alive) continue;
-      const dx = b.x - a.x, dy = b.y - a.y;
-      const dist = Math.sqrt(dx * dx + dy * dy);
-      const minD = a.r + b.r;
-      if (dist < minD) {
-        // Separate
-        if (dist < 1) continue;
-        const overlap = (minD - dist) / 2;
-        const nx = dx / dist, ny = dy / dist;
-        a.x -= nx * overlap;
-        a.y -= ny * overlap;
-        b.x += nx * overlap;
-        b.y += ny * overlap;
-
-        // Merge check
-        if (a.level === b.level && a.mergeCd <= 0 && b.mergeCd <= 0) {
-          const mx = (a.x + b.x) / 2;
-          const my = (a.y + b.y) / 2;
-          const newLevel = a.level + 1;
-          const merged = new Star(mx, my, newLevel, (a.vx + b.vx) * 0.5, (a.vy + b.vy) * 0.5);
-          merged.mergeCd = MERGE_CD;
-          merged.flash = 0.3;
-          a.alive = false;
-          b.alive = false;
-          stars.push(merged);
-
-          // Combo
-          const cw = comboWindow(gameTime);
-          if (gameTime - lastMergeTime < cw) {
-            comboCount++;
-          } else {
-            comboCount = 1;
-          }
-          lastMergeTime = gameTime;
-          const mult = 1 + comboCount * 0.5;
-          score += newLevel * 10 * mult;
-
-          spawnMergeParticles(mx, my, newLevel);
-          if (newLevel >= 5) { shakeTime = 0.15; shakeIntensity = 4; }
+        // chain multiplier
+        if (now - lastFuseTime < CHAIN_WIN) {
+          chainCount++;
         } else {
-          // Elastic push
-          const relV = (a.vx - b.vx) * nx + (a.vy - b.vy) * ny;
-          if (relV > 0) {
-            a.vx -= nx * relV * 0.5;
-            a.vy -= ny * relV * 0.5;
-            b.vx += nx * relV * 0.5;
-            b.vy += ny * relV * 0.5;
-          }
+          chainCount = 1;
         }
+        lastFuseTime = now;
+        chainMult = chainCount;
+        if (chainCount > bestChainSession) bestChainSession = chainCount;
+        if (chainCount > bestChainAT) { bestChainAT = chainCount; lsSet('nc_bestChain', bestChainAT); }
+
+        const pts = chainCount * 2;
+        score += pts;
+        if (score > bestScore) { bestScore = score; newBest = true; lsSet('nc_best', bestScore); }
+
+        // visuals
+        spawnFuseParticles(mx, my, a.hue, b.hue);
+        addShockwave(CX, CY);
+        triggerShake(6, 0.2);
+        bhPulse = 1.15;
+        bgHue = (bgHue + (chainCount >= 2 ? 60 : 5)) % 360;
+
+        // chain slam text
+        if (chainCount >= 2) {
+          chainSlamScale = 3.0; chainSlamAlpha = 1;
+        }
+
+        // NOVA at x5
+        if (chainCount >= 5) {
+          novaMode = 1.0;
+        }
+
+        // bg shift every 10 pts
+        bgHue = (bgHue + Math.floor(score / 10) * 2) % 360;
+
+        // respawn planet on outer ring
+        const hue = a.isMin || b.isMin ? Math.floor(Math.random()*360) : (a.hue + b.hue) / 2;
+        const ri = Math.max(a.ringIdx, b.ringIdx);
+        const np = makePlanet(ri, Math.random()*Math.PI*2, (a.hue+b.hue)/2|0);
+        spawnLaunchStreak(np);
+
+        // mark for removal, add new
+        a.alive = false; b.alive = false;
+        planets.push(np);
       }
     }
   }
+  planets = planets.filter(p => p.alive);
+}
 
-  // Remove dead
-  stars = stars.filter(s => s.alive);
+// ── UPDATE ────────────────────────────────────────────────────────────────────
+function update(dt, now) {
+  if (state !== 'playing') return;
 
-  // ---- DANGER LINE ----
-  let anyAbove = false;
-  for (const s of stars) {
-    if (s.y - s.r <= dangerY) {
-      anyAbove = true;
-      break;
+  // gravity surge timer (phase 5+)
+  if (getPhase() >= 5) {
+    gravSurgeTimer += dt;
+    if (gravSurgeTimer >= 30) {
+      gravSurgeTimer = 0; gravSurgeActive = true; gravSurgeT = 3;
     }
   }
-  if (anyAbove) {
-    dangerHold += dt;
-  } else {
-    dangerHold = Math.max(0, dangerHold - dt * 2.5);
-  }
-  if (dangerHold >= DANGER_HOLD_LIMIT) {
-    gameOver();
+  if (gravSurgeActive) {
+    gravSurgeT -= dt;
+    if (gravSurgeT <= 0) { gravSurgeActive = false; }
   }
 
-  // Particles
-  for (const p of particles) {
-    p.x += p.vx * dt;
-    p.y += p.vy * dt;
-    p.vy += 100 * dt;
+  // rebuild planets on phase change
+  const ph = getPhase();
+  const neededRings = ph >= 5 ? 3 : ph >= 3 ? 2 : 1;
+  const existingRings = new Set(planets.map(p=>p.ringIdx));
+  if (existingRings.size < neededRings) buildPhase();
+
+  // add planets if needed by phase
+  const targetCount = ph >= 5 ? 6 : ph >= 4 ? 5 : ph >= 2 ? 3 : 2;
+  while (planets.length < targetCount) {
+    const ri = planets.length < 2 ? 0 : planets.length < 4 ? 1 : 2;
+    const hue = COLORS[planets.length % COLORS.length];
+    planets.push(makePlanet(ri, Math.random()*Math.PI*2, hue));
+  }
+
+  // split events (phase 4+)
+  if (ph >= 4 && Math.random() < dt * 0.03 && splitWarnings.length === 0) {
+    const candidates = planets.filter(p => !p.isMin && !p.splitWarn);
+    if (candidates.length > 0) {
+      const p = candidates[Math.floor(Math.random()*candidates.length)];
+      p.splitWarn = true;
+      splitWarnings.push({planet: p, t: 1.0});
+    }
+  }
+
+  // process split warnings
+  for (let i = splitWarnings.length-1; i >= 0; i--) {
+    splitWarnings[i].t -= dt;
+    if (splitWarnings[i].t <= 0) {
+      const p = splitWarnings[i].planet;
+      if (p.alive && planets.includes(p)) {
+        // split into two minis
+        const m1 = makePlanet(p.ringIdx, p.angle - 0.15, p.hue);
+        const m2 = makePlanet(p.ringIdx, p.angle + 0.15, (p.hue+40)%360);
+        m1.isMin = true; m2.isMin = true;
+        m1.r = PLANET_R * 0.65; m2.r = PLANET_R * 0.65;
+        m1.speed = p.speed * 1.2; m2.speed = -p.speed * 1.2;
+        p.alive = false;
+        planets.push(m1, m2);
+        planets = planets.filter(q => q.alive);
+      }
+      splitWarnings.splice(i, 1);
+    }
+  }
+
+  // update planets
+  for (const p of planets) {
+    // orbit
+    const speedMult = ph >= 4 ? 1.3 : ph >= 2 ? 1.1 : 1.0;
+    p.angle += p.speed * speedMult * dt;
+
+    // decay inward
+    const decay = getDecayRate(p.ringIdx) * dt;
+    p.orbitR -= decay;
+
+    // compute BH radius including pulse
+    const bhR = BH_R_BASE * bhPulse;
+
+    // check if eaten by BH
+    if (p.orbitR <= bhR + p.r) {
+      p.alive = false;
+      hearts--;
+      triggerShake(10, 0.4);
+      spawnFuseParticles(CX, CY, p.hue, 0);
+      if (hearts <= 0) {
+        triggerGameOver();
+        return;
+      }
+    }
+
+    // critical warning (85% of way to center)
+    const maxR = p.baseOrbitR;
+    const pct = 1 - (p.orbitR - BH_R_BASE) / (maxR - BH_R_BASE);
+    p.critical = Math.max(0, Math.min(1, (pct - 0.6) / 0.25));
+
+    // trail
+    const px = CX + Math.cos(p.angle) * p.orbitR;
+    const py = CY + Math.sin(p.angle) * p.orbitR;
+    p.trail.push({x: px, y: py, a: 0.6});
+    if (p.trail.length > 28) p.trail.shift();
+    for (let t of p.trail) t.a *= 0.93;
+  }
+
+  planets = planets.filter(p => p.alive);
+
+  tryFuse(dt, now);
+
+  // update particles
+  for (let i = particles.length-1; i >= 0; i--) {
+    const p = particles[i];
+    p.x += p.vx * dt; p.y += p.vy * dt;
+    p.vx *= 0.92; p.vy *= 0.92;
     p.life -= dt;
+    if (p.life <= 0) particles.splice(i, 1);
   }
-  particles = particles.filter(p => p.life > 0);
 
-  // Shake
-  if (shakeTime > 0) shakeTime -= dt;
+  // update shockwaves
+  for (let i = shockwaves.length-1; i >= 0; i--) {
+    const s = shockwaves[i];
+    s.r += (s.maxR - s.r) * dt * 4;
+    s.life -= dt * 2.5;
+    if (s.life <= 0) shockwaves.splice(i, 1);
+  }
+
+  // bhPulse spring back
+  bhPulse += (1 - bhPulse) * dt * 8;
+
+  // novaMode decay
+  if (novaMode > 0) novaMode -= dt * 2;
+
+  // shake
+  if (shakeMag > 0) {
+    shakeX = (Math.random()*2-1) * shakeMag;
+    shakeY = (Math.random()*2-1) * shakeMag;
+    shakeMag -= shakeDecay * dt * 60;
+    if (shakeMag < 0) { shakeMag = 0; shakeX = 0; shakeY = 0; }
+  }
+
+  // squeeze spring
+  if (squeezeX < 1) {
+    squeezeX += (1 - squeezeX) * dt * 18;
+    if (squeezeX > 0.999) squeezeX = 1;
+  }
+
+  // tapFlash
+  if (tapFlash > 0) tapFlash -= dt * 16;
+
+  // chainSlam
+  if (chainSlamScale > 0) { chainSlamScale -= dt * 8; chainSlamAlpha -= dt * 2; }
+  if (chainSlamAlpha < 0) chainSlamAlpha = 0;
+
+  // accretion angle
+  accretionAngle += dt * 0.8;
 }
 
-// ---- GAME OVER ----
-function gameOver() {
+// ── GAME OVER ─────────────────────────────────────────────────────────────────
+function triggerGameOver() {
   state = 'gameover';
-  score = Math.floor(score);
-  if (score > bestScore) {
-    bestScore = score;
-    try { localStorage.setItem('gf_best', bestScore); } catch(e) {}
-  }
-  shakeTime = 0.4; shakeIntensity = 8;
-
-  // Show overlay with share buttons
-  showGameOverOverlay();
+  gameoverT = 0;
+  scoreCountDisplay = 0;
+  bhGlow = 1.0;
+  updateStreak();
+  triggerShake(12, 0.5);
 }
 
-function showGameOverOverlay() {
-  overlay.classList.add('active');
-  shareRow.innerHTML = '';
-
-  const shareBtn = document.createElement('button');
-  shareBtn.className = 'btn';
-  shareBtn.textContent = 'Share Score';
-  shareBtn.onclick = shareScore;
-  shareRow.appendChild(shareBtn);
-
-  const challengeBtn = document.createElement('button');
-  challengeBtn.className = 'btn secondary';
-  challengeBtn.textContent = 'Challenge a Friend';
-  challengeBtn.onclick = challengeFriend;
-  shareRow.appendChild(challengeBtn);
-}
-
-function shareScore() {
-  const text = `I scored ${score} in Galaxy Fuse! Can you beat me?\nhttps://balinti.github.io/galaxy-fuse/`;
-  if (navigator.share) {
-    navigator.share({ title: 'Galaxy Fuse', text }).catch(() => {});
-  } else {
-    navigator.clipboard.writeText(text).then(() => {
-      alert('Score copied to clipboard!');
-    }).catch(() => {});
-  }
-}
-
-function challengeFriend() {
-  const name = 'Player';
-  const url = `https://balinti.github.io/galaxy-fuse/?challengeScore=${score}&challengeName=${encodeURIComponent(name)}`;
-  const text = `I challenge you to beat my ${score} points in Galaxy Fuse!\n${url}`;
-  if (navigator.share) {
-    navigator.share({ title: 'Galaxy Fuse Challenge', text }).catch(() => {});
-  } else {
-    navigator.clipboard.writeText(text).then(() => {
-      alert('Challenge link copied!');
-    }).catch(() => {});
-  }
-}
-
-// ---- DRAW ----
-function draw() {
-  ctx.save();
-
-  // Shake
-  if (shakeTime > 0) {
-    const sx = (Math.random() - 0.5) * shakeIntensity * 2;
-    const sy = (Math.random() - 0.5) * shakeIntensity * 2;
-    ctx.translate(sx, sy);
-  }
-
-  // Background
-  const grad = ctx.createLinearGradient(0, 0, 0, H);
-  grad.addColorStop(0, '#0a0a1e');
-  grad.addColorStop(0.5, '#0d0826');
-  grad.addColorStop(1, '#050510');
+// ── DRAW HELPERS ──────────────────────────────────────────────────────────────
+function drawBG() {
+  const h = bgHue, h2 = (bgHue + 30) % 360;
+  const grad = ctx.createRadialGradient(CX, CY, 0, CX, CY, Math.max(W,H)*0.8);
+  grad.addColorStop(0, `hsl(${h},40%,5%)`);
+  grad.addColorStop(1, `hsl(${h2},30%,2%)`);
   ctx.fillStyle = grad;
   ctx.fillRect(0, 0, W, H);
+}
 
-  // Tube bg
-  ctx.fillStyle = 'rgba(10,10,30,0.7)';
-  ctx.beginPath();
-  ctx.roundRect(tubeX, tubeY, tubeW, tubeH, 8);
-  ctx.fill();
+function drawStars() {
+  ctx.save();
+  for (const s of stars3) { ctx.globalAlpha = s.a * 0.6; ctx.fillStyle='#fff'; ctx.beginPath(); ctx.arc(s.x,s.y,s.r,0,Math.PI*2); ctx.fill(); }
+  for (const s of stars2) { ctx.globalAlpha = s.a * 0.8; ctx.fillStyle='#aac'; ctx.beginPath(); ctx.arc(s.x,s.y,s.r,0,Math.PI*2); ctx.fill(); }
+  for (const s of stars1) { ctx.globalAlpha = s.a;       ctx.fillStyle='#ddf'; ctx.beginPath(); ctx.arc(s.x,s.y,s.r,0,Math.PI*2); ctx.fill(); }
+  ctx.restore();
+}
 
-  // Tube border
-  ctx.strokeStyle = 'rgba(100,80,200,0.2)';
+function drawAccretion() {
+  const n = 7;
+  for (let i = 0; i < n; i++) {
+    const a = accretionAngle + (i / n) * Math.PI * 2;
+    const len = (0.4 + 0.2 * ((i+1)/n)) * Math.PI;
+    const h = (bgHue + i * 40) % 360;
+    const rr = BH_R_BASE * bhPulse + 6 + i * 4;
+    ctx.beginPath();
+    ctx.arc(CX, CY, rr, a, a + len);
+    ctx.strokeStyle = `hsla(${h},80%,65%,${0.12 + 0.06 * ((i+1)/n)})`;
+    ctx.lineWidth = 2 + i * 0.5;
+    ctx.stroke();
+  }
+}
+
+function drawBlackHole() {
+  const r = BH_R_BASE * bhPulse;
+  // nova glow
+  if (novaMode > 0 || bhGlow > 0) {
+    const gAmt = Math.max(novaMode, bhGlow);
+    const gGrad = ctx.createRadialGradient(CX,CY,0,CX,CY,r*6);
+    gGrad.addColorStop(0, `rgba(255,255,255,${gAmt*0.9})`);
+    gGrad.addColorStop(0.3, `rgba(180,140,255,${gAmt*0.4})`);
+    gGrad.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.fillStyle = gGrad;
+    ctx.beginPath(); ctx.arc(CX,CY,r*6,0,Math.PI*2); ctx.fill();
+  }
+  // core
+  const grad = ctx.createRadialGradient(CX,CY,0,CX,CY,r);
+  grad.addColorStop(0, '#000');
+  grad.addColorStop(0.7, '#0a0010');
+  grad.addColorStop(1, `hsl(${bgHue},60%,12%)`);
+  ctx.fillStyle = grad;
+  ctx.beginPath(); ctx.arc(CX,CY,r,0,Math.PI*2); ctx.fill();
+  // rim
+  ctx.strokeStyle = `hsl(${bgHue},70%,40%)`;
   ctx.lineWidth = 1.5;
-  ctx.beginPath();
-  ctx.roundRect(tubeX, tubeY, tubeW, tubeH, 8);
-  ctx.stroke();
+  ctx.beginPath(); ctx.arc(CX,CY,r,0,Math.PI*2); ctx.stroke();
+}
 
-  // Danger line
-  const dangerAlpha = dangerHold > 0 ? 0.4 + 0.4 * Math.sin(gameTime * 8) : 0.15;
-  ctx.strokeStyle = `rgba(255,60,60,${dangerAlpha})`;
-  ctx.lineWidth = 2;
-  ctx.setLineDash([6, 4]);
-  ctx.beginPath();
-  ctx.moveTo(tubeX + 4, dangerY);
-  ctx.lineTo(tubeX + tubeW - 4, dangerY);
-  ctx.stroke();
-  ctx.setLineDash([]);
+function drawOrbitRings() {
+  const rings = new Set(planets.map(p=>p.ringIdx));
+  rings.forEach(ri => {
+    const baseR = RING_RADII[ri] * (Math.min(CX,CY)-20);
+    // check if any planet on this ring is close to others
+    let closeGlow = 0;
+    for (let i = 0; i < planets.length; i++) {
+      if (planets[i].ringIdx !== ri) continue;
+      for (let j = i+1; j < planets.length; j++) {
+        if (planets[j].ringIdx !== ri) continue;
+        const da = Math.abs(planets[i].angle - planets[j].angle) % (Math.PI*2);
+        const minDa = Math.min(da, Math.PI*2-da);
+        if (minDa < 0.5) closeGlow = Math.max(closeGlow, 1 - minDa/0.5);
+      }
+    }
+    ctx.beginPath();
+    ctx.arc(CX, CY, baseR, 0, Math.PI*2);
+    ctx.strokeStyle = `hsla(${bgHue},60%,${40+closeGlow*30}%,${0.08+closeGlow*0.2})`;
+    ctx.lineWidth = 1 + closeGlow*2;
+    ctx.stroke();
+  });
+}
 
-  // Danger fill when in danger
-  if (dangerHold > 0.3) {
-    const a = Math.min(0.15, dangerHold * 0.06);
-    ctx.fillStyle = `rgba(255,40,40,${a})`;
-    ctx.fillRect(tubeX, tubeY, tubeW, dangerY - tubeY);
-  }
+function drawPlanet(p) {
+  const x = CX + Math.cos(p.angle) * p.orbitR;
+  const y = CY + Math.sin(p.angle) * p.orbitR;
+  const r = p.r;
 
-  // Black hole glow
-  const bhPulse = 0.6 + 0.2 * Math.sin(gameTime * 2);
-  const bhGrad = ctx.createRadialGradient(bhX, bhY, 0, bhX, bhY, 60);
-  bhGrad.addColorStop(0, `rgba(80,0,160,${bhPulse * 0.5})`);
-  bhGrad.addColorStop(0.4, `rgba(40,0,100,${bhPulse * 0.25})`);
-  bhGrad.addColorStop(1, 'rgba(0,0,0,0)');
-  ctx.fillStyle = bhGrad;
-  ctx.fillRect(bhX - 60, bhY - 60, 120, 120);
-
-  // Solar wind telegraph
-  if (solarWindTelegraph > 0) {
-    const a = 0.15 * (solarWindTelegraph / 1.2);
-    ctx.fillStyle = solarWindDir > 0 ? `rgba(255,200,50,${a})` : `rgba(50,200,255,${a})`;
-    const wx = solarWindDir > 0 ? tubeX + tubeW - 30 : tubeX;
-    ctx.fillRect(wx, tubeY, 30, tubeH);
-  }
-
-  // Solar wind active
-  if (solarWindActive) {
-    ctx.fillStyle = solarWindDir > 0 ? 'rgba(255,200,50,0.06)' : 'rgba(50,200,255,0.06)';
-    ctx.fillRect(tubeX, tubeY, tubeW, tubeH);
-    // Wind lines
-    ctx.strokeStyle = solarWindDir > 0 ? 'rgba(255,200,50,0.15)' : 'rgba(50,200,255,0.15)';
-    ctx.lineWidth = 1;
-    for (let i = 0; i < 6; i++) {
-      const ly = tubeY + (tubeH * (i + 0.5) / 6) + Math.sin(gameTime * 3 + i) * 10;
+  // trail
+  if (p.trail.length > 1) {
+    ctx.save();
+    for (let i = 1; i < p.trail.length; i++) {
+      const t0 = p.trail[i-1], t1 = p.trail[i];
+      const frac = i / p.trail.length;
       ctx.beginPath();
-      ctx.moveTo(solarWindDir > 0 ? tubeX : tubeX + tubeW, ly);
-      ctx.lineTo(solarWindDir > 0 ? tubeX + tubeW : tubeX, ly);
+      ctx.moveTo(t0.x, t0.y);
+      ctx.lineTo(t1.x, t1.y);
+      ctx.strokeStyle = `hsla(${p.hue},80%,65%,${frac*0.5*t1.a})`;
+      ctx.lineWidth = r * frac * 0.8;
+      ctx.lineCap = 'round';
       ctx.stroke();
     }
+    ctx.restore();
   }
 
-  // Drop indicator (pendulum)
-  if (state === 'playing') {
-    const dx = dropX();
-    ctx.fillStyle = 'rgba(255,255,255,0.4)';
+  // critical warning ring
+  if (p.critical > 0.01) {
+    const warnHue = p.critical > 0.7 ? 0 : 40;
+    const pulse = 0.5 + 0.5 * Math.sin(Date.now() * 0.008);
     ctx.beginPath();
-    ctx.arc(dx, tubeY + 10, 4, 0, Math.PI * 2);
-    ctx.fill();
+    ctx.arc(x, y, r + 5 + pulse*4, 0, Math.PI*2);
+    ctx.strokeStyle = `hsla(${warnHue},90%,60%,${p.critical * 0.7})`;
+    ctx.lineWidth = 2;
+    ctx.stroke();
+  }
 
-    // Dotted drop line
-    ctx.strokeStyle = 'rgba(255,255,255,0.08)';
-    ctx.lineWidth = 1;
-    ctx.setLineDash([3, 6]);
+  // split warning
+  if (p.splitWarn) {
     ctx.beginPath();
-    ctx.moveTo(dx, tubeY + 16);
-    ctx.lineTo(dx, tubeY + 60);
+    ctx.arc(x, y, r + 8 + Math.sin(Date.now()*0.01)*3, 0, Math.PI*2);
+    ctx.strokeStyle = `hsla(60,100%,80%,0.8)`;
+    ctx.lineWidth = 1.5;
+    ctx.setLineDash([4,4]);
     ctx.stroke();
     ctx.setLineDash([]);
   }
 
-  // Stars
-  for (const s of stars) {
-    const c = STAR_COLORS[(s.level - 1) % STAR_COLORS.length];
-    // Outer glow
+  // glow
+  const glowColor = p.critical > 0.7 ? 0 : p.critical > 0.3 ? 40 : p.hue;
+  const glowGrad = ctx.createRadialGradient(x,y,0,x,y,r*2.2);
+  glowGrad.addColorStop(0, `hsla(${glowColor},80%,70%,0.4)`);
+  glowGrad.addColorStop(1, 'rgba(0,0,0,0)');
+  ctx.fillStyle = glowGrad;
+  ctx.beginPath(); ctx.arc(x,y,r*2.2,0,Math.PI*2); ctx.fill();
+
+  // body
+  const grad = ctx.createRadialGradient(x-r*0.3,y-r*0.3,0,x,y,r);
+  grad.addColorStop(0, `hsl(${p.hue},80%,80%)`);
+  grad.addColorStop(0.6, `hsl(${p.hue},75%,55%)`);
+  grad.addColorStop(1, `hsl(${p.hue},60%,30%)`);
+  ctx.fillStyle = grad;
+  ctx.beginPath(); ctx.arc(x,y,r,0,Math.PI*2); ctx.fill();
+
+  // mini indicator
+  if (p.isMin) {
+    ctx.strokeStyle = 'rgba(255,255,255,0.5)';
+    ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.arc(x,y,r,0,Math.PI*2); ctx.stroke();
+  }
+}
+
+function drawParticles() {
+  ctx.save();
+  for (const p of particles) {
+    const t = p.life / p.maxLife;
+    ctx.globalAlpha = t * 0.9;
+    ctx.fillStyle = `hsl(${p.hue},80%,65%)`;
     ctx.beginPath();
-    ctx.arc(s.x, s.y, s.r * 1.6, 0, Math.PI * 2);
-    ctx.fillStyle = `hsla(${c[0]},${c[1]}%,${c[2]}%,0.12)`;
+    ctx.arc(p.x, p.y, p.size * t, 0, Math.PI*2);
     ctx.fill();
+  }
+  ctx.restore();
+}
 
-    // Mid glow
-    ctx.beginPath();
-    ctx.arc(s.x, s.y, s.r * 1.2, 0, Math.PI * 2);
-    ctx.fillStyle = `hsla(${c[0]},${c[1]}%,${c[2]}%,0.2)`;
-    ctx.fill();
+function drawShockwaves() {
+  ctx.save();
+  for (const s of shockwaves) {
+    ctx.globalAlpha = s.life * 0.5;
+    ctx.strokeStyle = '#fff';
+    ctx.lineWidth = 2 * s.life;
+    ctx.beginPath(); ctx.arc(s.x, s.y, s.r, 0, Math.PI*2); ctx.stroke();
+  }
+  ctx.restore();
+}
 
-    // Core
-    ctx.beginPath();
-    ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
-    const coreGrad = ctx.createRadialGradient(s.x - s.r * 0.3, s.y - s.r * 0.3, 0, s.x, s.y, s.r);
-    coreGrad.addColorStop(0, `hsl(${c[0]},${c[1]}%,${Math.min(90, c[2] + 25)}%)`);
-    coreGrad.addColorStop(1, `hsl(${c[0]},${c[1]}%,${c[2]}%)`);
-    ctx.fillStyle = coreGrad;
-    ctx.fill();
+function drawHUD() {
+  if (state !== 'playing') return;
+  // score
+  ctx.save();
+  ctx.fillStyle = `hsl(${bgHue},60%,80%)`;
+  ctx.font = 'bold 28px system-ui';
+  ctx.textAlign = 'center';
+  ctx.fillText(score, CX, 38);
+  // best
+  ctx.font = '13px system-ui';
+  ctx.fillStyle = 'rgba(200,200,220,0.5)';
+  ctx.fillText('BEST ' + bestScore, CX, 56);
+  // hearts
+  const heartStr = '♥'.repeat(hearts) + '♡'.repeat(3-hearts);
+  ctx.font = '18px system-ui';
+  ctx.textAlign = 'right';
+  ctx.fillStyle = `hsl(0,80%,65%)`;
+  ctx.fillText(heartStr, W - 14, 34);
+  // chain
+  if (chainMult >= 2) {
+    ctx.textAlign = 'left';
+    ctx.font = 'bold 14px system-ui';
+    ctx.fillStyle = `hsl(${bgHue+60},90%,75%)`;
+    ctx.fillText('×'+chainMult+' CHAIN', 14, 34);
+  }
+  // gravity surge warning
+  if (gravSurgeActive) {
+    ctx.textAlign = 'center';
+    ctx.font = 'bold 13px system-ui';
+    ctx.fillStyle = `hsl(0,90%,65%)`;
+    ctx.fillText('⚡ GRAVITY SURGE', CX, H - 14);
+  }
+  ctx.restore();
 
-    // Flash on merge
-    if (s.flash > 0) {
-      ctx.beginPath();
-      ctx.arc(s.x, s.y, s.r * (1 + s.flash * 2), 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(255,255,255,${s.flash * 0.6})`;
-      ctx.fill();
-    }
-
-    // Level number
-    ctx.fillStyle = '#fff';
-    ctx.font = `bold ${Math.max(10, s.r * 0.9)}px 'Segoe UI',sans-serif`;
+  // chain slam
+  if (chainSlamAlpha > 0 && chainMult >= 2) {
+    ctx.save();
+    ctx.globalAlpha = Math.max(0, chainSlamAlpha);
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    ctx.fillText(s.level, s.x, s.y + 1);
+    const sc = Math.max(0.01, chainSlamScale);
+    ctx.font = `bold ${Math.round(48 * sc)}px system-ui`;
+    ctx.fillStyle = `hsl(${bgHue+60},100%,75%)`;
+    ctx.shadowColor = `hsl(${bgHue+60},100%,60%)`;
+    ctx.shadowBlur = 20;
+    const label = chainMult >= 5 ? '★ NOVA ×'+chainMult : '×'+chainMult;
+    ctx.fillText(label, CX, CY);
+    ctx.restore();
   }
+}
 
-  // Particles
-  for (const p of particles) {
-    const a = p.life / p.maxLife;
-    ctx.beginPath();
-    ctx.arc(p.x, p.y, p.size * a, 0, Math.PI * 2);
-    ctx.fillStyle = `hsla(${p.hue},80%,65%,${a * 0.8})`;
-    ctx.fill();
-  }
+function drawTapFlash() {
+  if (tapFlash <= 0) return;
+  ctx.save();
+  ctx.globalAlpha = tapFlash * 0.18;
+  ctx.fillStyle = `hsl(${tapFlashHue},80%,70%)`;
+  ctx.fillRect(0,0,W,H);
+  ctx.restore();
+}
 
-  // ---- UI ----
-  // Score
+function drawNovaFlash() {
+  if (novaMode <= 0) return;
+  ctx.save();
+  ctx.globalAlpha = novaMode * 0.85;
   ctx.fillStyle = '#fff';
-  ctx.font = 'bold 20px "Segoe UI",sans-serif';
-  ctx.textAlign = 'left';
-  ctx.textBaseline = 'top';
-  ctx.fillText(Math.floor(score), PAD + 4, PAD + 6);
+  ctx.fillRect(0,0,W,H);
+  ctx.restore();
+}
 
-  // Best
-  ctx.fillStyle = 'rgba(200,200,240,0.5)';
-  ctx.font = '12px "Segoe UI",sans-serif';
-  ctx.fillText(`BEST ${bestScore}`, PAD + 4, PAD + 28);
+// ── START SCREEN ──────────────────────────────────────────────────────────────
+function drawStart() {
+  drawBG(); drawStars();
+  // animated demo planets
+  const t = Date.now() * 0.001;
+  ctx.save();
+  ctx.globalAlpha = 0.25;
+  for (let i = 0; i < 3; i++) {
+    const a = t * (0.5 + i*0.2) + i * Math.PI * 0.6;
+    const or = RING_RADII[0] * (Math.min(CX,CY)-20) * (0.6 + i*0.15);
+    const hue = COLORS[i*2];
+    const px = CX + Math.cos(a)*or, py = CY + Math.sin(a)*or;
+    const g = ctx.createRadialGradient(px,py,0,px,py,PLANET_R*2);
+    g.addColorStop(0,`hsla(${hue},80%,70%,0.6)`); g.addColorStop(1,'rgba(0,0,0,0)');
+    ctx.fillStyle=g; ctx.beginPath(); ctx.arc(px,py,PLANET_R*2,0,Math.PI*2); ctx.fill();
+    ctx.fillStyle=`hsl(${hue},70%,60%)`; ctx.beginPath(); ctx.arc(px,py,PLANET_R,0,Math.PI*2); ctx.fill();
+  }
+  ctx.restore();
+  drawBlackHole();
+  ctx.save();
+  ctx.textAlign = 'center';
+  // title
+  const titleY = CY - 80;
+  ctx.font = 'bold 42px system-ui';
+  ctx.fillStyle = '#fff';
+  ctx.shadowColor = `hsl(${bgHue},80%,70%)`;
+  ctx.shadowBlur = 20;
+  ctx.fillText('NOVA CHAIN', CX, titleY);
+  ctx.shadowBlur = 0;
+  ctx.font = '14px system-ui';
+  ctx.fillStyle = 'rgba(180,180,210,0.7)';
+  ctx.fillText('Tap to reverse orbits', CX, titleY + 26);
+  ctx.fillText('Fuse planets before they fall', CX, titleY + 44);
+  // tap prompt
+  const pulse = 0.6 + 0.4 * Math.sin(t * 3);
+  ctx.globalAlpha = pulse;
+  ctx.font = 'bold 18px system-ui';
+  ctx.fillStyle = `hsl(${bgHue},80%,80%)`;
+  ctx.fillText('TAP TO START', CX, CY + 90);
+  ctx.globalAlpha = 1;
+  // best
+  if (bestScore > 0) {
+    ctx.font = '13px system-ui';
+    ctx.fillStyle = 'rgba(200,200,220,0.5)';
+    ctx.fillText('BEST: ' + bestScore, CX, CY + 115);
+  }
+  ctx.restore();
+}
 
-  // Combo
-  if (comboCount > 1) {
-    ctx.fillStyle = `hsla(${50 + comboCount * 20},90%,65%,${0.6 + 0.3 * Math.sin(gameTime * 6)})`;
-    ctx.font = 'bold 14px "Segoe UI",sans-serif';
-    ctx.textAlign = 'center';
-    ctx.fillText(`x${(1 + comboCount * 0.5).toFixed(1)} COMBO`, W / 2, PAD + 6);
+// ── GAME OVER SCREEN ──────────────────────────────────────────────────────────
+function drawGameOver(dt) {
+  gameoverT += dt;
+  // animated score count
+  if (gameoverT > 0.4 && gameoverT < 1.0) {
+    scoreCountDisplay = Math.round(score * ((gameoverT-0.4)/0.6));
+  } else if (gameoverT >= 1.0) {
+    scoreCountDisplay = score;
   }
 
-  // Split charges
-  ctx.textAlign = 'right';
-  ctx.fillStyle = 'rgba(200,200,240,0.6)';
-  ctx.font = '12px "Segoe UI",sans-serif';
-  ctx.fillText('SPLITS', W - PAD - 4, PAD + 6);
-  for (let i = 0; i < SPLIT_MAX; i++) {
-    const cx = W - PAD - 8 - i * 16;
-    const cy = PAD + 28;
+  drawBG(); drawStars(); drawAccretion(); drawBlackHole();
+  drawParticles(); drawShockwaves();
+
+  ctx.save();
+  ctx.textAlign = 'center';
+  const cx = CX, cy = CY;
+
+  // score reveal
+  if (gameoverT > 0.4) {
+    const alpha = Math.min(1, (gameoverT - 0.4) / 0.3);
+    ctx.globalAlpha = alpha;
+    ctx.font = 'bold 64px system-ui';
+    ctx.fillStyle = '#fff';
+    ctx.shadowColor = `hsl(${bgHue},80%,70%)`;
+    ctx.shadowBlur = 30;
+    ctx.fillText(scoreCountDisplay, cx, cy - 50);
+    ctx.shadowBlur = 0;
+    ctx.font = '14px system-ui';
+    ctx.fillStyle = 'rgba(180,180,210,0.7)';
+    ctx.fillText('SCORE', cx, cy - 20);
+  }
+
+  // best chain + new best
+  if (gameoverT > 0.6) {
+    const alpha = Math.min(1, (gameoverT-0.6)/0.3);
+    ctx.globalAlpha = alpha;
+    ctx.font = '13px system-ui';
+    ctx.fillStyle = `hsl(${bgHue},70%,75%)`;
+    ctx.fillText('BEST CHAIN: ×' + bestChainSession, cx, cy + 10);
+    if (newBest) {
+      ctx.font = 'bold 15px system-ui';
+      ctx.fillStyle = `hsl(50,100%,70%)`;
+      ctx.shadowColor = `hsl(50,100%,50%)`;
+      ctx.shadowBlur = 15;
+      ctx.fillText('✦ NEW BEST ✦', cx, cy + 32);
+      ctx.shadowBlur = 0;
+    }
+  }
+
+  // proximity hook
+  if (gameoverT > 1.0 && bestScore > 0 && !newBest) {
+    const alpha = Math.min(1, (gameoverT-1.0)/0.2);
+    ctx.globalAlpha = alpha;
+    ctx.font = '12px system-ui';
+    ctx.fillStyle = 'rgba(180,180,210,0.6)';
+    const gap = bestScore - score;
+    ctx.fillText(gap > 0 ? `${gap} fuses from your best` : 'You beat your best!', cx, cy + 35);
+  }
+
+  // streak
+  if (gameoverT > 1.0 && streak > 1) {
+    const alpha = Math.min(1, (gameoverT-1.0)/0.2);
+    ctx.globalAlpha = alpha;
+    ctx.font = '12px system-ui';
+    ctx.fillStyle = 'rgba(180,200,180,0.6)';
+    ctx.fillText(`🔥 ${streak} day streak`, cx, cy + 52);
+  }
+
+  // AGAIN button
+  if (gameoverT > 1.2) {
+    const alpha = Math.min(1, (gameoverT-1.2)/0.3);
+    ctx.globalAlpha = alpha;
+    const btnW = 140, btnH = 42, btnX = cx - btnW/2, btnY = cy + 70;
+    const br = ctx.createLinearGradient(btnX, btnY, btnX+btnW, btnY+btnH);
+    br.addColorStop(0, `hsl(${bgHue},80%,45%)`);
+    br.addColorStop(1, `hsl(${(bgHue+40)%360},80%,45%)`);
+    ctx.fillStyle = br;
     ctx.beginPath();
-    ctx.arc(cx, cy, 5, 0, Math.PI * 2);
-    ctx.fillStyle = i < splitCharges ? 'rgba(100,200,255,0.8)' : 'rgba(100,100,140,0.3)';
+    ctx.roundRect(btnX, btnY, btnW, btnH, 21);
     ctx.fill();
+    ctx.font = 'bold 18px system-ui';
+    ctx.fillStyle = '#fff';
+    ctx.fillText('AGAIN', cx, btnY + 27);
   }
 
-  // Danger bar
-  if (dangerHold > 0) {
-    const bw = 60;
-    const bx = W / 2 - bw / 2;
-    const by = dangerY - 14;
-    ctx.fillStyle = 'rgba(0,0,0,0.4)';
-    ctx.fillRect(bx, by, bw, 6);
-    ctx.fillStyle = `rgba(255,${Math.floor(60 * (1 - dangerHold / DANGER_HOLD_LIMIT))},40,0.8)`;
-    ctx.fillRect(bx, by, bw * Math.min(1, dangerHold / DANGER_HOLD_LIMIT), 6);
+  // share button (if chain >= 2)
+  if (gameoverT > 1.3 && bestChainSession >= 2) {
+    const alpha = Math.min(1, (gameoverT-1.3)/0.3);
+    ctx.globalAlpha = alpha;
+    const btnW = 160, btnH = 36, btnX = cx - btnW/2, btnY = cy + 122;
+    ctx.fillStyle = 'rgba(255,255,255,0.1)';
+    ctx.beginPath();
+    ctx.roundRect(btnX, btnY, btnW, btnH, 18);
+    ctx.fill();
+    ctx.font = '13px system-ui';
+    ctx.fillStyle = 'rgba(200,200,220,0.8)';
+    ctx.fillText('SHARE ×' + bestChainSession + ' CHAIN', cx, btnY + 23);
   }
 
-  // ---- SCREEN STATES ----
+  ctx.restore();
+
+  // tap hint
+  if (gameoverT > 1.5) {
+    ctx.save();
+    const pulse = 0.4 + 0.4 * Math.sin(gameoverT * 4);
+    ctx.globalAlpha = pulse;
+    ctx.textAlign = 'center';
+    ctx.font = '12px system-ui';
+    ctx.fillStyle = 'rgba(200,200,220,0.6)';
+    ctx.fillText('tap anywhere to play again', CX, H - 20);
+    ctx.restore();
+  }
+}
+
+// ── SHARE HANDLER ─────────────────────────────────────────────────────────────
+function handleShareClick(ex, ey) {
+  if (state !== 'gameover' || bestChainSession < 2) return;
+  const cy = CY;
+  const btnY = cy + 122, btnH = 36;
+  const btnX = CX - 80, btnW = 160;
+  if (ex >= btnX && ex <= btnX+btnW && ey >= btnY && ey <= btnY+btnH) {
+    const url = `${location.origin}${location.pathname}?chain=${bestChainSession}`;
+    const text = `I hit a ×${bestChainSession} chain in NOVA CHAIN – can you beat it? ${url}`;
+    if (navigator.share) {
+      navigator.share({title:'Nova Chain', text, url}).catch(()=>{});
+    } else {
+      navigator.clipboard.writeText(text).then(()=>alert('Copied to clipboard!')).catch(()=>{});
+    }
+    return true;
+  }
+  return false;
+}
+
+cvs.addEventListener('pointerdown', e => {
+  const rect = cvs.getBoundingClientRect();
+  const ex = (e.clientX - rect.left) * (W / rect.width);
+  const ey = (e.clientY - rect.top)  * (H / rect.height);
+  if (state === 'gameover') handleShareClick(ex, ey);
+});
+
+// ── MAIN LOOP ─────────────────────────────────────────────────────────────────
+function loop(ts) {
+  animId = requestAnimationFrame(loop);
+  const dt = Math.min((ts - lastTime) / 1000, 0.05);
+  lastTime = ts;
+
+  if (state === 'playing') {
+    update(dt, ts / 1000);
+  } else if (state === 'gameover') {
+    // update particles/shockwaves still
+    for (let i = particles.length-1; i >= 0; i--) {
+      const p = particles[i]; p.x+=p.vx*dt; p.y+=p.vy*dt; p.vx*=0.92; p.vy*=0.92; p.life-=dt;
+      if (p.life<=0) particles.splice(i,1);
+    }
+    for (let i = shockwaves.length-1; i >= 0; i--) {
+      const s = shockwaves[i]; s.r+=(s.maxR-s.r)*dt*4; s.life-=dt*2.5;
+      if (s.life<=0) shockwaves.splice(i,1);
+    }
+    if (shakeMag > 0) {
+      shakeX=(Math.random()*2-1)*shakeMag; shakeY=(Math.random()*2-1)*shakeMag;
+      shakeMag -= shakeDecay*dt*60;
+      if (shakeMag<0){shakeMag=0;shakeX=0;shakeY=0;}
+    }
+    bhGlow -= dt * 0.8;
+    if (bhGlow < 0) bhGlow = 0;
+    accretionAngle += dt * 0.8;
+  }
+
+  // ── RENDER ──
+  ctx.save();
+  ctx.translate(shakeX, shakeY);
+  if (squeezeX < 1) {
+    ctx.translate(CX, CY);
+    ctx.scale(squeezeX, 2 - squeezeX);
+    ctx.translate(-CX, -CY);
+  }
+
   if (state === 'start') {
-    drawScreenOverlay('Galaxy Fuse', null, 'Tap to Start');
-  }
-  if (state === 'gameover') {
-    drawScreenOverlay('Game Over', `Score: ${Math.floor(score)}  |  Best: ${bestScore}`, 'Tap to Retry');
+    drawStart();
+  } else if (state === 'playing') {
+    drawBG();
+    drawStars();
+    drawAccretion();
+    drawOrbitRings();
+    for (const p of planets) drawPlanet(p);
+    drawParticles();
+    drawShockwaves();
+    drawBlackHole();
+    drawTapFlash();
+    drawNovaFlash();
+    drawHUD();
+  } else if (state === 'gameover') {
+    drawGameOver(dt);
   }
 
   ctx.restore();
 }
 
-function drawScreenOverlay(title, subtitle, action) {
-  // Dim
-  ctx.fillStyle = 'rgba(5,5,15,0.7)';
-  ctx.fillRect(0, 0, W, H);
-
-  ctx.textAlign = 'center';
-
-  // Title
-  ctx.fillStyle = '#fff';
-  ctx.font = 'bold 32px "Segoe UI",sans-serif';
-  ctx.fillText(title, W / 2, H * 0.32);
-
-  // Subtitle
-  if (subtitle) {
-    ctx.fillStyle = 'rgba(200,200,240,0.8)';
-    ctx.font = '16px "Segoe UI",sans-serif';
-    ctx.fillText(subtitle, W / 2, H * 0.40);
-  }
-
-  // Challenge info
-  if (challengeScore !== null) {
-    const beat = score >= challengeScore;
-    ctx.fillStyle = beat ? 'rgba(80,255,120,0.9)' : 'rgba(255,180,80,0.9)';
-    ctx.font = '14px "Segoe UI",sans-serif';
-    const msg = state === 'gameover'
-      ? (beat ? `You beat ${challengeName || 'them'}!` : `${challengeName || 'They'} scored ${challengeScore}. Try again!`)
-      : `Beat ${challengeName || 'them'}: ${challengeScore} pts`;
-    ctx.fillText(msg, W / 2, H * 0.46);
-  }
-
-  // Action
-  const pulse = 0.6 + 0.4 * Math.sin(performance.now() / 400);
-  ctx.fillStyle = `rgba(200,200,255,${pulse})`;
-  ctx.font = '18px "Segoe UI",sans-serif';
-  ctx.fillText(action, W / 2, H * 0.56);
-
-  // Stars decoration
-  const t = performance.now() / 1000;
-  for (let i = 0; i < 20; i++) {
-    const sx = (W * 0.1) + (i * 37 + Math.sin(t + i * 0.7) * 15) % (W * 0.8);
-    const sy = (H * 0.1) + (i * 53 + Math.cos(t * 0.5 + i) * 10) % (H * 0.8);
-    const ss = 1 + Math.sin(t * 2 + i) * 0.5;
-    ctx.beginPath();
-    ctx.arc(sx, sy, ss, 0, Math.PI * 2);
-    ctx.fillStyle = `rgba(200,200,255,${0.15 + Math.sin(t + i) * 0.1})`;
-    ctx.fill();
-  }
-}
-
-// ---- MAIN LOOP ----
-let lastTime = 0;
-function loop(ts) {
-  const dt = Math.min((ts - lastTime) / 1000, 0.05);
-  lastTime = ts;
-  update(dt);
-  draw();
-  requestAnimationFrame(loop);
-}
-
-// Show start
-overlay.classList.remove('active');
-requestAnimationFrame((ts) => { lastTime = ts; loop(ts); });
+// ── KICK OFF ──────────────────────────────────────────────────────────────────
+lastTime = performance.now();
+loop(lastTime);
 
 })();
 </script>
